@@ -29,58 +29,61 @@ This project is a technical assessment demonstrating full-stack development skil
 ## 📚 Complete Documentation
 
 ### Section A: Architecture & Problem Solving
-- **[Question 1: Intent Extraction Strategy](./docs/section-a-question-1.md)**
+- **[Question 1: Intent Extraction Strategy](./docs/assessment/section-a/question-1-intent-extraction.md)**
   - Natural language query processing pipeline
   - ML and rule-based entity extraction
   - Fallback strategies for ambiguous queries
 
-- **[Question 2: Flexible Schema Design](./docs/section-a-question-2.md)**
+- **[Question 2: Flexible Schema Design](./docs/assessment/section-a/question-2-flexible-schema.md)**
   - Document vs. relational data model analysis
   - Dynamic attribute storage and indexing
   - Performance optimization for multi-attribute filtering
 
-- **[Question 3: Dynamic Facet API Design](./docs/section-a-question-3.md)**
+- **[Question 3: Dynamic Facet API Design](./docs/assessment/section-a/question-3-facet-api.md)**
   - RESTful API contract for faceted search
   - Real-time facet count calculation
   - Category-aware filter configuration
 
 ### Section B: Implementation Strategy
-- **[Complete Implementation Strategy](./docs/section-b-implementation-strategy.md)**
+- **[Complete Implementation Strategy](./docs/assessment/section-b/implementation-strategy.md)**
   - Detailed technical approach and architecture
   - Development phases and timeline
   - Performance considerations and testing strategy
 
-- **[Assignment Requirements](./docs/assignment-requirements.md)**
+- **[Assignment Requirements](./docs/assessment/requirements.md)**
   - Full technical assessment specification
   - Evaluation criteria and deliverables
   - Submission guidelines and expectations
 
 ### Production-Ready Architecture
-- **[Detailed Architecture Analysis](./docs/detailed-architecture-analysis.md)**
+- **[Detailed Architecture Analysis](./docs/architecture/detailed-analysis.md)**
   - Complete requirement analysis (assessment vs production)
   - Technology stack evolution and scalability considerations
   - Implementation phases with timelines
   - Performance optimization strategies
 
-- **[Production-Ready Features](./docs/production-ready-features.md)**
+- **[Production-Ready Features](./docs/production/features.md)**
   - Advanced search capabilities with ML/AI
   - Security & authentication systems
   - Multi-tenant architecture and white-label solutions
   - Real-time features and mobile strategy
   - Integration ecosystem and performance optimization
 
-- **[Microservices Architecture](./docs/microservices-architecture.md)**
+- **[Microservices Architecture](./docs/architecture/microservices.md)**
   - Complete microservices breakdown and structure
   - Inter-service communication patterns
   - Database strategy and deployment considerations
   - Monitoring, observability, and health checks
 
-- **[Go-to-Market Strategy](./docs/go-to-market-strategy.md)**
+- **[Go-to-Market Strategy](./docs/production/go-to-market.md)**
   - Market positioning and competitive advantages
   - Pricing strategy and revenue models
   - Customer acquisition and success strategies
   - Global expansion and internationalization
   - Success metrics and KPIs
+
+### 📚 Documentation Overview
+- **[Documentation Index](./docs/README.md)** - Complete navigation guide for all documentation
 
 ## 🚀 Quick Start
 
