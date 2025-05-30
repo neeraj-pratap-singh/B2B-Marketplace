@@ -10,8 +10,6 @@ const options = {
   maxPoolSize: 10,
   serverSelectionTimeoutMS: 5000,
   socketTimeoutMS: 45000,
-  bufferCommands: false,
-  bufferMaxEntries: 0,
 };
 
 let client: MongoClient;
@@ -60,7 +58,6 @@ export async function connectMongoose() {
 
   if (!cached?.promise) {
     const opts = {
-      bufferCommands: false,
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
