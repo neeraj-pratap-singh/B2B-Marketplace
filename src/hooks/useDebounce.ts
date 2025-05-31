@@ -29,18 +29,21 @@ export function useDebounce<T>(value: T, delay: number = 500): T {
  * Provides both debounced value and loading indicator
  * 
  * @param value - The search value
- * @param delay - Delay in milliseconds (default: 300ms for search)
+ * @param delay - Delay in milliseconds (default: 500ms for better UX)
  * @returns Object with debouncedValue and isDebouncing state
  */
 export function useDebounceWithLoading<T>(
   value: T, 
-  delay: number = 300
+  delay: number = 500
 ): { debouncedValue: T; isDebouncing: boolean } {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
   const [isDebouncing, setIsDebouncing] = useState(false);
 
   useEffect(() => {
-    setIsDebouncing(true);
+    // Only set debouncing state if value actually changed
+    if (value !== debouncedValue) {
+      setIsDebouncing(true);
+    }
     
     const handler = setTimeout(() => {
       setDebouncedValue(value);
@@ -49,9 +52,8 @@ export function useDebounceWithLoading<T>(
 
     return () => {
       clearTimeout(handler);
-      setIsDebouncing(false);
     };
-  }, [value, delay]);
+  }, [value, delay, debouncedValue]);
 
   return { debouncedValue, isDebouncing };
 } 

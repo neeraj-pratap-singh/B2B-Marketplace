@@ -104,6 +104,12 @@ export default function SearchPage() {
 
   // Effect to trigger search when parameters change
   useEffect(() => {
+    // Always perform search - either filtered or show all
+    const hasQuery = currentQuery.trim().length > 0;
+    const hasCategory = currentCategory && currentCategory !== 'all';
+    const hasFilters = Object.keys(currentFilters).length > 0;
+    
+    // Perform search regardless - if no criteria, API will return all results
     performSearch(currentQuery, currentCategory, currentFilters, currentPage);
   }, [currentQuery, currentCategory, currentPage, currentFilters]);
 

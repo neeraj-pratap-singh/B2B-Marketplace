@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton, ListingSkeleton } from '@/components/ui/skeleton';
-import { MapPin, IndianRupee, ChevronLeft, ChevronRight, Package } from 'lucide-react';
+import { MapPin, IndianRupee, ChevronLeft, ChevronRight, Package, Search } from 'lucide-react';
 
 interface SearchResultsProps {
   results: Listing[];
@@ -47,14 +47,28 @@ export default function SearchResults({
   if (loading) {
     return (
       <div className="p-6">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between mb-6">
-            <Skeleton className="h-6 w-48" />
-          </div>
-          <div className="grid gap-4">
-            {[...Array(5)].map((_, i) => (
-              <ListingSkeleton key={i} />
-            ))}
+        <div className="space-y-6">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <ListingSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (!query && results.length === 0 && !loading) {
+    return (
+      <div className="p-6">
+        <div className="text-center py-12">
+          <Package className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No Products Available
+          </h3>
+          <p className="text-gray-500 mb-4">
+            There are currently no products in the marketplace.
+          </p>
+          <div className="text-sm text-gray-400">
+            Check back later for new listings
           </div>
         </div>
       </div>
@@ -69,16 +83,25 @@ export default function SearchResults({
           <h2 className="text-xl font-semibold">
             {pagination?.total ? (
               <>
-                {pagination.total} result{pagination.total !== 1 ? 's' : ''}
-                {query?.q && (
-                  <span className="text-gray-600"> for "{query.q}"</span>
-                )}
-                {query?.category && (
-                  <span className="text-gray-600"> in {query.category.replace('-', ' ')}</span>
+                {query?.q ? (
+                  <>
+                    {pagination.total} result{pagination.total !== 1 ? 's' : ''}
+                    <span className="text-gray-600"> for "{query.q}"</span>
+                    {query?.category && (
+                      <span className="text-gray-600"> in {query.category.replace('-', ' ')}</span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    All Products ({pagination.total})
+                    {query?.category && (
+                      <span className="text-gray-600"> in {query.category.replace('-', ' ')}</span>
+                    )}
+                  </>
                 )}
               </>
             ) : (
-              'Search Results'
+              query?.q ? 'Search Results' : 'All Products'
             )}
           </h2>
           {pagination && pagination.total > 0 && (

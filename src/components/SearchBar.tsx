@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { useDebounceWithLoading } from '@/hooks/useDebounce';
 
 interface SearchBarProps {
   onSearch: (query: string, category: string) => void;
@@ -68,9 +67,6 @@ export default function SearchBar({
   const [category, setCategory] = useState(initialCategory);
   const [showRecentSearches, setShowRecentSearches] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  
-  // Debounced search for real-time experience
-  const { debouncedValue: debouncedQuery, isDebouncing } = useDebounceWithLoading(query, 300);
 
   // Update local state when props change
   useEffect(() => {
@@ -86,24 +82,13 @@ export default function SearchBar({
     setRecentSearches(getRecentSearches());
   }, []);
 
-  // Auto-search when debounced query or category changes
-  useEffect(() => {
-    const apiCategory = category === 'all' ? '' : category;
-    if (debouncedQuery !== initialQuery || apiCategory !== initialCategory) {
-      onSearch(debouncedQuery.trim(), apiCategory);
-      if (debouncedQuery.trim()) {
-        addRecentSearch(debouncedQuery.trim());
-        setRecentSearches(getRecentSearches());
-      }
-    }
-  }, [debouncedQuery, category, onSearch, initialQuery, initialCategory]);
-
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedQuery = query.trim();
     const apiCategory = category === 'all' ? '' : category;
     onSearch(trimmedQuery, apiCategory);
-    if (trimmedQuery) {
+    if (trimmedQuery && trimmedQuery.length >= 2) {
       addRecentSearch(trimmedQuery);
       setRecentSearches(getRecentSearches());
     }
@@ -112,7 +97,9 @@ export default function SearchBar({
 
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
-    // Category change triggers automatic search via useEffect
+    // Trigger search immediately when category changes
+    const apiCategory = newCategory === 'all' ? '' : newCategory;
+    onSearch(query.trim(), apiCategory);
   };
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,7 +109,6 @@ export default function SearchBar({
   const handleRecentSearchClick = (recentQuery: string) => {
     setQuery(recentQuery);
     setShowRecentSearches(false);
-    // This will trigger the debounced search
   };
 
   const handleClearQuery = () => {
@@ -136,7 +122,7 @@ export default function SearchBar({
     setRecentSearches([]);
   };
 
-  const isSearching = loading || isDebouncing;
+  const isSearching = loading;
 
   return (
     <div className="bg-white rounded-lg shadow-sm border p-6 relative">
