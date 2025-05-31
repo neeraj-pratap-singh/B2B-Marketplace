@@ -1,9 +1,10 @@
 version: '3.8'
 
 services:
+  # MongoDB Database
   mongodb:
     image: mongo:7.0
-    container_name: b2b-marketplace-mongo
+    container_name: b2b-marketplace-mongodb
     restart: unless-stopped
     ports:
       - "27017:27017"
@@ -14,26 +15,107 @@ services:
       - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
       - b2b-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ connectionStatus: 1 })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  mongo-express:
-    image: mongo-express:1.0.2
-    container_name: b2b-marketplace-mongo-express
+  # Redis Cache (Optional)
+  redis:
+    image: redis:7.2-alpine
+    container_name: b2b-marketplace-redis
     restart: unless-stopped
     ports:
-      - "8081:8081"
-    environment:
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      ME_CONFIG_MONGODB_PORT: 27017
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: admin123
-    depends_on:
-      - mongodb
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
     networks:
       - b2b-network
+    command: redis-server --appendonly yes
+    profiles:
+      - with-redis
+
+  # Next.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: b2b-marketplace-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/b2b-marketplace
+      - NEXTAUTH_SECRET=docker-production-secret-key-change-in-production
+      - NEXTAUTH_URL=http://localhost:3000
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - b2b-network
+    volumes:
+      - ./.next:/app/.next
+    profiles:
+      - full-stack
+
+  # Development Application (Alternative to production)
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: b2b-marketplace-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Debug port
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=mongodb://mongodb:27017/b2b-marketplace
+      - NEXTAUTH_SECRET=development-secret-key
+      - NEXTAUTH_URL=http://localhost:3000
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - b2b-network
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    profiles:
+      - development
 
 volumes:
   mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
 
 networks:
   b2b-network:
-    driver: bridge 
+    driver: bridge
+
+# Usage Examples:
+# 
+# 1. MongoDB only (for local development):
+#    docker-compose up -d mongodb
+#
+# 2. Full production stack:
+#    docker-compose --profile full-stack up -d
+#
+# 3. Development with hot reload:
+#    docker-compose --profile development up -d
+#
+# 4. With Redis cache:
+#    docker-compose --profile full-stack --profile with-redis up -d
+#
+# 5. Stop all services:
+#    docker-compose down
+#
+# 6. Remove volumes (clean slate):
+#    docker-compose down -v 
