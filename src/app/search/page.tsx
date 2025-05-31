@@ -18,7 +18,7 @@ export default function SearchPage() {
 
   // Get current search parameters
   const currentQuery = searchParams.get('q') || '';
-  const currentCategory = searchParams.get('category') || '';
+  const currentCategory = searchParams.get('category') || 'all';
   const currentPage = parseInt(searchParams.get('page') || '1');
   const currentFilters = useMemo(() => {
     try {
@@ -46,7 +46,7 @@ export default function SearchPage() {
     }
     
     if (updates.category !== undefined) {
-      if (updates.category) {
+      if (updates.category && updates.category !== 'all') {
         newParams.set('category', updates.category);
       } else {
         newParams.delete('category');

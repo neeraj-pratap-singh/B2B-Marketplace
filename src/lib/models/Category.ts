@@ -82,7 +82,6 @@ const CategorySchema = new Schema<CategoryDocument>({
 });
 
 // Indexes
-CategorySchema.index({ slug: 1 });
 CategorySchema.index({ isActive: 1, sortOrder: 1 });
 CategorySchema.index({ name: 'text', description: 'text' });
 

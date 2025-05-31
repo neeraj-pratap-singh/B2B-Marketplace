@@ -17,7 +17,7 @@ interface SearchBarProps {
 }
 
 const CATEGORIES = [
-  { value: '', label: 'All Categories' },
+  { value: 'all', label: 'All Categories' },
   { value: 'televisions', label: 'Televisions' },
   { value: 'running-shoes', label: 'Running Shoes' }
 ];
@@ -88,8 +88,9 @@ export default function SearchBar({
 
   // Auto-search when debounced query or category changes
   useEffect(() => {
-    if (debouncedQuery !== initialQuery || category !== initialCategory) {
-      onSearch(debouncedQuery.trim(), category);
+    const apiCategory = category === 'all' ? '' : category;
+    if (debouncedQuery !== initialQuery || apiCategory !== initialCategory) {
+      onSearch(debouncedQuery.trim(), apiCategory);
       if (debouncedQuery.trim()) {
         addRecentSearch(debouncedQuery.trim());
         setRecentSearches(getRecentSearches());
@@ -100,7 +101,8 @@ export default function SearchBar({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedQuery = query.trim();
-    onSearch(trimmedQuery, category);
+    const apiCategory = category === 'all' ? '' : category;
+    onSearch(trimmedQuery, apiCategory);
     if (trimmedQuery) {
       addRecentSearch(trimmedQuery);
       setRecentSearches(getRecentSearches());
@@ -245,7 +247,7 @@ export default function SearchBar({
         </div>
 
         {/* Active Search Indicators */}
-        {(query || category) && (
+        {(query || (category && category !== 'all')) && (
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm text-gray-600">Active filters:</span>
             {query && (
@@ -260,12 +262,12 @@ export default function SearchBar({
                 </button>
               </Badge>
             )}
-            {category && (
+            {category && category !== 'all' && (
               <Badge variant="secondary" className="flex items-center gap-1">
                 Category: {CATEGORIES.find(c => c.value === category)?.label}
                 <button
                   type="button"
-                  onClick={() => setCategory('')}
+                  onClick={() => setCategory('all')}
                   className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
                 >
                   <X className="h-3 w-3" />
