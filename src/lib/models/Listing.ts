@@ -153,7 +153,11 @@ const ListingSchema = new Schema<ListingDocument>({
       ret._id = ret._id.toString();
       ret.categoryId = ret.categoryId.toString();
       if (ret.attributes) {
-        ret.attributes = Object.fromEntries(ret.attributes);
+        // Handle both Map and Object cases
+        if (ret.attributes instanceof Map) {
+          ret.attributes = Object.fromEntries(ret.attributes);
+        }
+        // If it's already an object, leave it as is
       }
       return ret;
     },
