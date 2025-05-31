@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { SearchResponse, Facet, SearchFilters } from '@/types';
 import SearchBar from '@/components/SearchBar';
@@ -73,17 +73,17 @@ export default function SearchPage() {
   };
 
   // Perform search
-  const performSearch = async () => {
+  const performSearch = async (query: string, category: string, filters: SearchFilters, page: number) => {
     setLoading(true);
     setError(null);
 
     try {
       const params = new URLSearchParams();
-      if (currentQuery) params.set('q', currentQuery);
-      if (currentCategory) params.set('category', currentCategory);
-      if (currentPage > 1) params.set('page', currentPage.toString());
-      if (Object.keys(currentFilters).length > 0) {
-        params.set('filters', JSON.stringify(currentFilters));
+      if (query) params.set('q', query);
+      if (category) params.set('category', category);
+      if (page > 1) params.set('page', page.toString());
+      if (Object.keys(filters).length > 0) {
+        params.set('filters', JSON.stringify(filters));
       }
 
       const response = await fetch(`/api/search?${params.toString()}`);
@@ -104,18 +104,27 @@ export default function SearchPage() {
 
   // Effect to trigger search when parameters change
   useEffect(() => {
-    performSearch();
+    performSearch(currentQuery, currentCategory, currentFilters, currentPage);
   }, [currentQuery, currentCategory, currentPage, currentFilters]);
 
   // Handlers
-  const handleSearch = (query: string, category: string) => {
+  const handleSearch = useCallback((query: string, category: string) => {
     updateSearchParams({
       q: query,
       category,
       page: 1, // Reset to first page
       filters: {} // Clear filters when new search
     });
-  };
+  }, [updateSearchParams]);
+
+  const handleClearSearch = useCallback(() => {
+    updateSearchParams({
+      q: '',
+      category: '',
+      page: 1,
+      filters: {}
+    });
+  }, [updateSearchParams]);
 
   const handleFiltersChange = (filters: SearchFilters) => {
     updateSearchParams({
@@ -145,6 +154,7 @@ export default function SearchPage() {
           initialQuery={currentQuery}
           initialCategory={currentCategory}
           loading={loading}
+          onClearSearch={handleClearSearch}
         />
 
         <div className="flex gap-6 mt-8">
@@ -182,7 +192,7 @@ export default function SearchPage() {
                   <div className="text-center">
                     <p className="text-red-600 font-medium">Error: {error}</p>
                     <button
-                      onClick={performSearch}
+                      onClick={() => performSearch(currentQuery, currentCategory, currentFilters, currentPage)}
                       className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                     >
                       Try Again
