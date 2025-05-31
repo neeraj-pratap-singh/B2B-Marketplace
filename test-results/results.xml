@@ -1,0 +1,32 @@
+<testsuites id="" name="" tests="10" failures="0" skipped="0" errors="0" time="10.884718000000001">
+<testsuite name="search.spec.ts" timestamp="2025-05-31T11:46:07.936Z" hostname="chromium" tests="2" failures="0" skipped="0" time="2.61" errors="0">
+<testcase name="B2B Marketplace Basic Tests › should load homepage successfully" classname="search.spec.ts" time="1.048">
+</testcase>
+<testcase name="B2B Marketplace Basic Tests › should navigate to search page" classname="search.spec.ts" time="1.562">
+</testcase>
+</testsuite>
+<testsuite name="search.spec.ts" timestamp="2025-05-31T11:46:07.936Z" hostname="firefox" tests="2" failures="0" skipped="0" time="5.147" errors="0">
+<testcase name="B2B Marketplace Basic Tests › should load homepage successfully" classname="search.spec.ts" time="1.98">
+</testcase>
+<testcase name="B2B Marketplace Basic Tests › should navigate to search page" classname="search.spec.ts" time="3.167">
+</testcase>
+</testsuite>
+<testsuite name="search.spec.ts" timestamp="2025-05-31T11:46:07.936Z" hostname="webkit" tests="2" failures="0" skipped="0" time="4.444" errors="0">
+<testcase name="B2B Marketplace Basic Tests › should load homepage successfully" classname="search.spec.ts" time="1.972">
+</testcase>
+<testcase name="B2B Marketplace Basic Tests › should navigate to search page" classname="search.spec.ts" time="2.472">
+</testcase>
+</testsuite>
+<testsuite name="search.spec.ts" timestamp="2025-05-31T11:46:07.936Z" hostname="Mobile Chrome" tests="2" failures="0" skipped="0" time="2.734" errors="0">
+<testcase name="B2B Marketplace Basic Tests › should load homepage successfully" classname="search.spec.ts" time="0.954">
+</testcase>
+<testcase name="B2B Marketplace Basic Tests › should navigate to search page" classname="search.spec.ts" time="1.78">
+</testcase>
+</testsuite>
+<testsuite name="search.spec.ts" timestamp="2025-05-31T11:46:07.936Z" hostname="Mobile Safari" tests="2" failures="0" skipped="0" time="2.728" errors="0">
+<testcase name="B2B Marketplace Basic Tests › should load homepage successfully" classname="search.spec.ts" time="1.493">
+</testcase>
+<testcase name="B2B Marketplace Basic Tests › should navigate to search page" classname="search.spec.ts" time="1.235">
+</testcase>
+</testsuite>
+</testsuites>
